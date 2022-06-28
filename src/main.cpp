@@ -7,23 +7,68 @@
 
 #include <Arduino.h>
 
-// Pin 13 has an LED connected on most Arduino boards.
-// Pin 11 has the LED on Teensy 2.0
-// Pin 6  has the LED on Teensy++ 2.0
-// Pin 13 has the LED on Teensy 3.0
-// give it a name:
-int led = 13;
+//
+// consts
+//
 
-// the setup routine runs once when you press reset:
+#define PIN_VACTROL_R      3
+#define PIN_VACTROL_L      4
+#define PIN_LED_1          5
+#define PIN_LED_2          6
+
+#define PIN_BUTTON_1       14
+#define PIN_BUTTON_2       15
+#define PIN_BUTTON_3       16
+
+#define PIN_CV             A6
+#define PIN_POT_1          A7
+#define PIN_POT_2          A8
+#define PIN_POT_3          A9
+
+#define ANALOG_WRITE_FREQ  36000
+
 void setup() {
-  // initialize the digital pin as an output.
-  pinMode(led, OUTPUT);
+  pinMode(PIN_VACTROL_L, OUTPUT);
+  pinMode(PIN_VACTROL_R, OUTPUT);
+  pinMode(PIN_LED_1, OUTPUT);
+  pinMode(PIN_LED_2, OUTPUT);
+
+  analogWriteFrequency(PIN_VACTROL_L, ANALOG_WRITE_FREQ);
+  analogWriteFrequency(PIN_VACTROL_R, ANALOG_WRITE_FREQ);
+  analogWriteFrequency(PIN_LED_1, ANALOG_WRITE_FREQ);
+  analogWriteFrequency(PIN_LED_2, ANALOG_WRITE_FREQ);
+
+  pinMode(PIN_BUTTON_1, INPUT_PULLUP);
+  pinMode(PIN_BUTTON_2, INPUT_PULLUP);
+  pinMode(PIN_BUTTON_3, INPUT_PULLUP);
+
+  pinMode(PIN_CV, INPUT);
+  pinMode(PIN_POT_1, INPUT);
+  pinMode(PIN_POT_2, INPUT);
+  pinMode(PIN_POT_3, INPUT);
 }
 
-// the loop routine runs over and over again forever:
+int a = 0;
+int d = 1;
+
 void loop() {
-  digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);               // wait for a second
-  digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);               // wait for a second
+  // analogWrite(PIN_VACTROL_L, a);
+  // analogWrite(PIN_VACTROL_R, a);
+  // analogWrite(PIN_LED_1, a);
+  // analogWrite(PIN_LED_2, a);
+
+  analogWrite(PIN_VACTROL_L, 255);
+  analogWrite(PIN_VACTROL_R, 255);
+  analogWrite(PIN_LED_1, 255);
+  analogWrite(PIN_LED_2, 255);
+
+  a += d;
+  if (a >= 255) {
+    d = -1;
+  }
+  if (a <= 0) {
+    d = 1;
+  }
+
+  delay(100);
 }
