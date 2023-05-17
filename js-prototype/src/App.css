@@ -1,0 +1,16 @@
+#root {
+  margin: 1rem auto;
+  padding: 1rem;
+}
+
+.dataset {
+  display: flex;
+  width: fit-content;
+  font-size: 10px;
+  text-align: center;
+  margin-bottom: 10rem;
+}
+
+.input {
+  margin-bottom: 1rem;
+}
