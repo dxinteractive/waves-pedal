@@ -3,14 +3,43 @@
   padding: 1rem;
 }
 
+.controls {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+}
+
+.datasets {
+  margin-top: 2rem;
+}
+
 .dataset {
-  display: flex;
-  width: fit-content;
-  font-size: 10px;
-  text-align: center;
   margin-bottom: 10rem;
 }
 
-.input {
+.slices {
+  display: flex;
+  width: fit-content;
+  font-size: 8px;
+  text-align: left;
+}
+
+.slice {
+  margin-right: 1px;
+  overflow: hidden;
+}
+
+.sliceBar {
+  background-color: #131313;
+  display: flex;
+  align-items: end;
+}
+
+input {
   margin-bottom: 1rem;
+  max-width: 3rem;
+}
+
+label {
+  margin-right: 1rem;
 }
