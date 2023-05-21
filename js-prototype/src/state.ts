@@ -9,7 +9,7 @@ export type State = {
   freq: string;
   slopeRange: string;
   valueRange: string;
-  recoveryValueRange: string;
+  speedRange: string;
   filter: string;
 };
 
@@ -20,6 +20,6 @@ export const STATE_DEFAULTS: State = {
   freq: "6",
   slopeRange: "1",
   valueRange: "6",
-  recoveryValueRange: "1",
+  speedRange: "0",
   filter: "",
 };

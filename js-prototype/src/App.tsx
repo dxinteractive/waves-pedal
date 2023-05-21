@@ -72,16 +72,40 @@ const DATASETS: Dataset[] = [
   },
   {
     label: "triangle",
-    max: 7,
+    max: 8,
     values: [
       0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4,
       3, 2, 1,
     ],
   },
   {
+    label: "triangsmol",
+    max: 8,
+    values: [
+      0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4,
+      3, 2, 1,
+    ].map((v) => v * 0.4 + 4),
+  },
+  {
+    label: "triangmixed",
+    max: 8,
+    values: [
+      0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4,
+      3, 2, 1, 0, 0, 1, 2, 4, 7, 9, 10, 11, 11, 10, 8, 6, 3, 2, 1, 0,
+    ].map((v) => v * 0.4 + 4),
+  },
+  {
     label: "sawtooth",
     max: 16,
     values: [0, 2, 4, 7, 9, 11, 13, 16, 0, 3, 4, 8, 10, 14, 16],
+  },
+  {
+    label: "saw2",
+    max: 16,
+    values: [
+      0, 1, 2, 3, 5, 6, 7, 9, 10, 11, 12, 13, 15, 16, 16, 0, 2, 3, 4, 5, 8, 9,
+      10, 12, 14, 15, 16,
+    ],
   },
   {
     label: "blips",
@@ -130,6 +154,7 @@ type StateNumberInputProps = {
   handleChange: (prop: keyof State, value: unknown) => void;
   prop: keyof State;
   step?: string;
+  min?: string;
 };
 
 function StateNumberInput(props: StateNumberInputProps) {
@@ -209,28 +234,32 @@ function App() {
           state={state}
           handleChange={handleChange}
           prop="seed"
+          min="0"
         />
         <StateNumberInput
           state={state}
           handleChange={handleChange}
           prop="freq"
+          min="1"
         />
         <StateNumberInput
           state={state}
           handleChange={handleChange}
           prop="slopeRange"
-          step="0.1"
+          min="0"
         />
         <StateNumberInput
           state={state}
           handleChange={handleChange}
           prop="valueRange"
+          min="0"
         />
         <StateNumberInput
           state={state}
           handleChange={handleChange}
-          prop="recoveryValueRange"
-          step="0.1"
+          prop="speedRange"
+          step="0.05"
+          min="0"
         />
         <StateCheckboxInput
           state={state}
@@ -314,15 +343,19 @@ function Slice({
       <div style={sliceBarStyle} className="sliceBar">
         <div style={slceFillStyle} />
       </div>
-      {index}
+      <span title="index">{Math.floor(index * 100) / 100}</span>
       <br />
-      {value}
+      <span title="value">{Math.floor(value * 100) / 100}</span>
       <br />
-      {slope !== undefined ? slope : null}
+      <span title="slope">
+        {slope !== undefined ? Math.floor(slope * 100) / 100 : null}
+      </span>
       <br />
-      {clip ? "X" : null}
+      <span title="clip">{clip ? "X" : null}</span>
       <br />
-      {offset !== undefined ? offset : null}
+      <span title="offset">
+        {offset !== undefined ? Math.floor(offset * 100) / 100 : null}
+      </span>
     </div>
   );
 }
