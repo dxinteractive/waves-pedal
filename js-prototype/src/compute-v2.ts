@@ -78,6 +78,7 @@ class Pattern {
   patternSlopes = intArray(MAX_PATTERN_LENGTH);
   patternLength = 0 as Int;
   patternMaxValue = 0 as Float;
+  patternRigid = false;
   chunkLength = 0 as Int;
 
   // preallocated arrays for interal ops
@@ -94,6 +95,8 @@ class Pattern {
   inputSpeedRange = 0 as Float;
   inputValueTransitionRange = 0.25 as Float;
   inputSlopeTransitionRange = 10 as Int;
+  inputRigidMatchRange = 0.5 as Float;
+  inputRigidThreshold = 0.3 as Float;
 
   // vars just for demo purposes
   demoOnlyChunkCount = 0 as Int;
@@ -152,6 +155,7 @@ class Pattern {
     if (this.chunkLength > patternLength) {
       this.chunkLength = patternLength;
     }
+    this.patternRigid = this.isPatternRigid();
   }
 
   setChunkLength(chunkLength: Int) {
@@ -159,6 +163,30 @@ class Pattern {
       chunkLength = this.patternLength;
     }
     this.chunkLength = chunkLength;
+  }
+
+  // "rigid" patterns are detected by having a certain percentage
+  // of values being identical
+  // these will not use vertical offset
+  private isPatternRigid(): boolean {
+    if (this.patternLength === 0) {
+      return false;
+    }
+    let found = this.patternValues[0];
+    let score = 1;
+    for (let i = 1; i < this.patternLength; i++) {
+      const value = this.patternValues[i];
+      if (Math.abs(value - found) < this.inputRigidMatchRange) {
+        score++;
+      } else {
+        score--;
+        if (score <= 0) {
+          found = value;
+          score = 1;
+        }
+      }
+    }
+    return score / this.patternLength > this.inputRigidThreshold;
   }
 
   //
@@ -182,18 +210,18 @@ class Pattern {
     for (let i = 0 as Int; i < this.patternLength; i++) {
       const newValue = this.getValueAt(i);
       const newSlope = this.getSlopeAt(i);
-      const suitableValue =
-        Math.abs(newValue - value) <
-        this.inputValueTransitionRange * this.patternMaxValue;
+      const valueTransitionRange = this.patternRigid
+        ? this.inputRigidMatchRange
+        : this.inputValueTransitionRange * this.patternMaxValue;
+      const suitableValue = Math.abs(newValue - value) <= valueTransitionRange;
       const suitableSlope =
-        Math.abs(newSlope - slope) < this.inputSlopeTransitionRange;
+        Math.abs(newSlope - slope) <= this.inputSlopeTransitionRange;
       if (suitableValue && suitableSlope) {
         this.transitionIndexes[this.transitionIndexesCount++] = i;
       }
     }
 
     if (this.transitionIndexesCount === 0) {
-      console.warn("no choices! oh no! report this to your supervisor!");
       this.timeUntilNextChunk = this.chunkLength;
       return;
     }
