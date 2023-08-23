@@ -1,7 +1,17 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "./src/MPR121/mpr121.h"
+#include <Audio.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
+#include <Bounce.h>
 
+// GUItool: begin automatically generated code
+AudioSynthWaveformSine   sine1;          //xy=280,1777.5
+AudioOutputAnalog        dac1;           //xy=423,1775.5
+AudioConnection          patchCord1(sine1, dac1);
+// GUItool: end automatically generated code
 
 //
 // consts
@@ -24,8 +34,16 @@
 #define PIN_POT_RANDOM     A9
 
 #define ANALOG_WRITE_FREQ  36000
-
 #define ANALOG_READ_MAX    1023
+#define BUTTON_DEBOUNCE_MS 15
+
+//
+// global instances
+//
+
+Bounce rec = Bounce(PIN_BUTTON_REC, BUTTON_DEBOUNCE_MS);
+Bounce sel = Bounce(PIN_BUTTON_SEL, BUTTON_DEBOUNCE_MS);
+Bounce sup = Bounce(PIN_BUTTON_SWITCH, BUTTON_DEBOUNCE_MS);
 
 //
 // setup
@@ -33,6 +51,7 @@
 
 void setup() {
   // Serial.begin(9600);
+  AudioMemory(10);
 
   pinMode(PIN_VACTROL_L, OUTPUT);
   pinMode(PIN_VACTROL_R, OUTPUT);
@@ -61,18 +80,6 @@ void setup() {
 //
 // reads
 //
-
-int readSel() {
-  return digitalRead(PIN_BUTTON_SEL) == 0;
-}
-
-int readRec() {
-  return digitalRead(PIN_BUTTON_REC) == 0;
-}
-
-int readSwitchUp() {
-  return digitalRead(PIN_BUTTON_SWITCH) == 0;
-}
 
 int mapConstrain(int x, int imin, int imax, int omin, int omax) {
   return constrain(map(x, imin, imax, omin, omax), omin, omax);
@@ -136,11 +143,17 @@ void loop() {
   // float cv = readCV();
 
   // 2us
-  // int sel = readSel();
-  // int rec = readRec();
-  // int switch = readSwitchUp();
+  // rec.update();
+  // sel.update();
+  // sup.update();
 
   // int start = micros();
+
+
+  // AudioNoInterrupts();
+  // waveform1.phase(knob_A3 * 360.0);
+  // AudioInterrupts();
+
 
   // delay(200);
   // Serial.println(":)");
